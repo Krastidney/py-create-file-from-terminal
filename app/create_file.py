@@ -30,7 +30,10 @@ def create_file() -> None:
         dir_path = ""
 
     if file_name:
-        file_path = os.path.join(dir_path, file_name) if dir_path else file_name
+        file_path = os.path.join(
+            dir_path,
+            file_name
+        ) if dir_path else file_name
         write_content(file_path)
 
 
