@@ -4,53 +4,55 @@ import datetime
 
 
 def create_file() -> None:
-    file_name = None
-    dir_parts = []
+    if len(sys.argv) < 2:
+        return
 
-    args = sys.argv[1:]
-    i = 0
+    flag = sys.argv[1]
+    both_flags = sys.argv
+    if "-f" in both_flags and "-d" in both_flags:
+        f_index = sys.argv.index("-f")
+        d_index = sys.argv.index("-d")
 
-    while i < len(args):
-        if args[i] == "-f":
-            file_name = args[i + 1]
-            i += 2
+        if f_index > d_index:
+            dir_parts = sys.argv[2:f_index]
+            file_name = sys.argv[f_index + 1]
 
-        elif args[i] == "-d":
-            i += 1
-            while i < len(args) and args[i] not in ("-f", "-d"):
-                dir_parts.append(args[i])
-                i += 1
-        else:
-            i += 1
+        elif f_index < d_index:
+            file_name = sys.argv[f_index + 1]
+            dir_parts = sys.argv[d_index + 1:]
 
-    if dir_parts:
-        dir_path = os.path.join(*dir_parts)
-        os.makedirs(dir_path, exist_ok=True)
-    else:
-        dir_path = ""
+        current_path = ""
+        for part in dir_parts:
+            current_path = os.path.join(current_path, part)
 
-    if file_name:
-        file_path = os.path.join(
-            dir_path,
-            file_name
-        ) if dir_path else file_name
+        os.makedirs(current_path, exist_ok=True)
+        file_path = os.path.join(current_path, file_name)
         write_content(file_path)
+
+    elif flag == "-d":
+        current_path = ""
+
+        for part in sys.argv[2:]:
+            current_path = os.path.join(current_path, part)
+        os.makedirs(current_path, exist_ok=True)
+
+    elif flag == "-f":
+        write_content(file_name)
 
 
 def write_content(file_path: str) -> None:
     with open(file_path, "a") as new_file:
-        if os.path.getsize(file_path) != 0:
-            new_file.write("\n")
+            counter = 1
+            today = datetime.datetime.now()
+            timestamp = today.strftime("%Y-%m-%d %H:%M:%S")
 
-        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        new_file.write(timestamp + "\n")
+            if os.path.getsize(file_path) != 0:
+                new_file.write("\n")
+            new_file.write(str(timestamp) + "\n")
 
-        counter = 1
-        while True:
-            text = input("Enter content line: ")
-
-            if not text or text.lower() == "stop":
-                break
-
-            new_file.write(f"{counter} {text}\n")
-            counter += 1
+            while True:
+                text = input("Enter content line: ")
+                if not text or text.lower() == "stop":
+                    break
+                new_file.write(f"{counter} {text}\n")
+                counter += 1
