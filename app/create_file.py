@@ -37,6 +37,7 @@ def create_file() -> None:
         os.makedirs(current_path, exist_ok=True)
 
     elif flag == "-f":
+        file_name = sys.argv[2]
         write_content(file_name)
 
 
@@ -56,3 +57,6 @@ def write_content(file_path: str) -> None:
                     break
                 new_file.write(f"{counter} {text}\n")
                 counter += 1
+
+if __name__ == "__main__":
+    create_file()
