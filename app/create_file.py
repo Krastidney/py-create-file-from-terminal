@@ -43,20 +43,21 @@ def create_file() -> None:
 
 def write_content(file_path: str) -> None:
     with open(file_path, "a") as new_file:
-            counter = 1
-            today = datetime.datetime.now()
-            timestamp = today.strftime("%Y-%m-%d %H:%M:%S")
+        counter = 1
+        today = datetime.datetime.now()
+        timestamp = today.strftime("%Y-%m-%d %H:%M:%S")
 
-            if os.path.getsize(file_path) != 0:
-                new_file.write("\n")
+        if os.path.getsize(file_path) != 0:
+            new_file.write("\n")
             new_file.write(str(timestamp) + "\n")
 
-            while True:
-                text = input("Enter content line: ")
-                if not text or text.lower() == "stop":
-                    break
-                new_file.write(f"{counter} {text}\n")
-                counter += 1
+        while True:
+            text = input("Enter content line: ")
+            if not text or text.lower() == "stop":
+                break
+            new_file.write(f"{counter} {text}\n")
+            counter += 1
+
 
 if __name__ == "__main__":
     create_file()
